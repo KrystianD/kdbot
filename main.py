@@ -88,20 +88,20 @@ class IRCBot(IRCClient.IRCClient):
 			cmd = None
 			argsStr = None
 			prompt = ""
-			#print "A"
+			
 			res = re.match ("^([!\.])([a-zA-Z0-9]+)$", message)
 			if res:
 				prompt = res.group (1)
 				cmd = res.group (2)
 				argsStr = ""
 			else:
-				#print "B"
+				
 				res = re.match ("^([!\.])([a-zA-Z0-9]+) (.*)$", message)
 				if res:
 					prompt = res.group (1)
 					cmd = res.group (2)
 					argsStr = res.group (3)
-			#print prompt, cmd, argsStr
+					
 			if cmd:
 				for plugin in self.pluginManager.commands:
 					if plugin["type"] == 0 and plugin["prompt"] == prompt and plugin["name"] == cmd:
@@ -131,8 +131,6 @@ class IRCBot(IRCClient.IRCClient):
 			self.pluginManager.Reload ()
 		elif hashlib.md5 (message).hexdigest () == "1240835963712cdc4c5bcfbafc4764cb":
 			self.Disconnect ()
-		#.OnPublicMessage ("aaaa", sender, message)
-			#self.isRunning = False
 	
 	def Run (self):
 		while self.connectionState != 4:

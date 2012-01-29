@@ -75,24 +75,24 @@ def c (ircbot, args):
 	#	ircbot.Reply (";> .. the last one first ;>")
 	#	return
 	
-	rr2 = random.randrange (2, 10 + 1)
-	rr1 = random.randrange (1, rr2)
+	rr2 = random.randint (2, 10)
+	rr1 = random.randint (1, rr2 - 1)
 	ircbot.Reply ("done! ({0} .. {1})".format (rr1, rr2))
 	
-	return
+	#return
 	
-	try:
-		_rr1 = int(args[0])
-		_rr2 = int(args[1])
-	except ValueError:
-		ircbot.Reply ("fakaf!")
-		return
-	if _rr1 > 10 or _rr2 > 10 or _rr1 < 1 or _rr2 < 1 or _rr1 > _rr2:
-		ircbot.Reply ("fakaf!")
-		return
-	rr1 = _rr1
-	rr2 = _rr2
-	ircbot.Reply ("done!")
+	#try:
+	#	_rr1 = int(args[0])
+	#	_rr2 = int(args[1])
+	#except ValueError:
+	#	ircbot.Reply ("fakaf!")
+	#	return
+	#if _rr1 > 10 or _rr2 > 10 or _rr1 < 1 or _rr2 < 1 or _rr1 > _rr2:
+	#	ircbot.Reply ("fakaf!")
+	#	return
+	#rr1 = _rr1
+	#rr2 = _rr2
+	#ircbot.Reply ("done!")
 
 rr1 = rr2 = 0
 @command ("rr", 0)
@@ -104,7 +104,7 @@ def c (ircbot, args):
 		return
 	
 	s = ircbot.GetLastSender ()
-	if rr1 == rr2 or random.choice ([True, False]):
+	if rr1 == rr2 or random.randint (1, rr2) <= rr1:
 		rr1 = rr1 - 1
 		rr2 = rr2 - 1
 		ircbot.Reply ("chlip " + random.choice ([":D", ":/", "/:|", ";p", "<3", "3<"]))
@@ -187,26 +187,26 @@ def c (ircbot, args):
 	if ircbot.mute: return
 	data = [
 		u"Jakie przyjemne są te zajęcia, zawsze widzę stąd kopiec Kościuszki, lubię tę salę...",
-    u"No i tutaj pan sobie zastosuje jakieś tam prawa, już nie pamiętam jak się nazywały...",
-    u"I tutaj mamy jeden bit na bit.",
-    u"Obecne karty graficzne mają tysiące albo miliony rdzeni.",
-    u"Niech pan wybierze sobie dowolną liczbę 7.",
-    u"Co się uciecze to nie utonie.",
-    u"i proszę mi tutaj sztachetek nie rysować!",
-    u"nanomilimetry",
-    u"To jest trochę \"inna\" informatyka.",
-    u"Samolot bening.",
-    u"Ja panu nie włożę tego wzoru do głowy szufladą.",
-    u"W Pixarze renderowanie filmow zajmuje miliony godzin.",
-    u"Czas wykonania operacji zmiennoprzecinkowej na karcie graficznej wynosi 50% czasu wykonania operacji zmiennoprzecinkowej na tej karcie.",
-    u"To panowie są braciami?",
-    u"\"W madziolotku nie zmieniają się pytania, zmieniają się odpowiedzi.\"",
-    u"Ile może mieć słowo bitów?? no może mieć np 32,64,121, dobrze mówię?",
-    u"Tekturowy świat? Chyba powinien być cyfrowy",
-    u"O jaki brzydki, taki brzydki kwadrat, toczony jakiś!",
-    u"A co pan tu rysujesz, aaaaaaaaa, chciał Pan ładnie to zrobić.",
-    u"Pan siedzi jakby Pan był..., a nie, nie będę złośliwa.",
-    u"Ja nie prowadzę wykładu żeby sama ze sobą rozmawiać, bo ja sobie z każdym rokiem coraz lepiej to wszystko utrwalam!",
+		u"No i tutaj pan sobie zastosuje jakieś tam prawa, już nie pamiętam jak się nazywały...",
+		u"I tutaj mamy jeden bit na bit.",
+		u"Obecne karty graficzne mają tysiące albo miliony rdzeni.",
+		u"Niech pan wybierze sobie dowolną liczbę 7.",
+		u"Co się uciecze to nie utonie.",
+		u"i proszę mi tutaj sztachetek nie rysować!",
+		u"nanomilimetry",
+		u"To jest trochę \"inna\" informatyka.",
+		u"Samolot bening.",
+		u"Ja panu nie włożę tego wzoru do głowy szufladą.",
+		u"W Pixarze renderowanie filmow zajmuje miliony godzin.",
+		u"Czas wykonania operacji zmiennoprzecinkowej na karcie graficznej wynosi 50% czasu wykonania operacji zmiennoprzecinkowej na tej karcie.",
+		u"To panowie są braciami?",
+		u"\"W madziolotku nie zmieniają się pytania, zmieniają się odpowiedzi.\"",
+		u"Ile może mieć słowo bitów?? no może mieć np 32,64,121, dobrze mówię?",
+		u"Tekturowy świat? Chyba powinien być cyfrowy",
+		u"O jaki brzydki, taki brzydki kwadrat, toczony jakiś!",
+		u"A co pan tu rysujesz, aaaaaaaaa, chciał Pan ładnie to zrobić.",
+		u"Pan siedzi jakby Pan był..., a nie, nie będę złośliwa.",
+		u"Ja nie prowadzę wykładu żeby sama ze sobą rozmawiać, bo ja sobie z każdym rokiem coraz lepiej to wszystko utrwalam!",
 		u"Chińczycy są na tyle sprytni że niedługo przetłumaczą nasz język i ZJEDZĄ NAS",
   ]
 	

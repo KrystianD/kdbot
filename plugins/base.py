@@ -216,63 +216,12 @@ def c (ircbot, args):
 def c (ircbot, args):
 	if ircbot.mute: return
 	data = [u"mówi", u"słyszy", u"dzwoni", u"widzi", u"wie", u"dosięgnie", u"ogarnia", u"pomoże"]
-	ircbot.Reply (u"{0}: {1}".format (ircbot.GetLastSender (), "Gurgul " + random.choice (data)))
+	ircbot.Reply (u"{0}: {1}".format (ircbot.GetLastSender (), random.choice (["Bubargul ", "Gurgul "]) + random.choice (data)))
 
 @command ("board", 0)
 def c (ircbot, args):
 	if ircbot.mute: return
 	ircbot.Reply ("http://cosketch.com")
-
-@command ("set", 2)
-def c (ircbot, args):
-	sets = pm.GetData ("sets", {})
-	if args[0] in sets and sets[args[0]][0] == "@":
-		ircbot.Reply ("locked!")
-		return
-	sets[args[0]] = args[1].lstrip ("@")
-	pm.SaveData ("sets", sets)
-
-@command ("unset", 1)
-def c (ircbot, args):
-	if not ircbot.GetLastSenderObj () or not ircbot.GetLastSenderObj ().op:
-		return
-	
-	sets = pm.GetData ("sets", {})
-	if args[0] in sets:
-		del sets[args[0]]
-		pm.SaveData ("sets", sets)
-
-@command ("lock", 1)
-def c (ircbot, args):
-	sets = pm.GetData ("sets", {})
-	if args[0] in sets and sets[args[0]][0] != "@":
-		sets[args[0]] = "@" + sets[args[0]]
-		ircbot.Reply ("done!")
-		pm.SaveData ("sets", sets)
-
-@handler ("unknown_command")
-def c (ircbot, sender, prompt, cmd, argsStr):
-	c123 (ircbot, sender, prompt, (cmd + " " + argsStr).strip ())
-	
-@handler ("unknown_message")
-def c123 (ircbot, sender, prompt, text):
-	if ircbot.mute: return
-	if prompt != "!": return
-	sets = pm.GetData ("sets", {})
-	parts = text.split (' ', 1)
-	text = parts[0]
-	argsStr = ""
-	if len(parts) == 2:
-		argsStr = parts[1]
-	if text in sets:
-		r = sets[text]
-		if r[0] == "@":
-			r = r[1:]
-		args = argsStr.strip ()
-		if len(args) > 0:
-			r = r.replace ("***", args)
-
-		ircbot.Reply (r)
 
 last = -1
 @command ("last", 0)

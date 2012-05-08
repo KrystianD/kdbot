@@ -25,15 +25,18 @@ class IRCClient(object):
 	def Connect (self):
 		self.sock = socket (AF_INET, SOCK_STREAM)
 
-		self.sock.connect (('chat.freenode.net', 6667))
-		self.lastPing = time.time ()
-		self.connectionState = 1
-		self.joinState = 0
-		self.data = ""
-		self.nickList = []
+		try:
+			self.sock.connect (('chat.freenode.net', 6667))
+			self.lastPing = time.time ()
+			self.connectionState = 1
+			self.joinState = 0
+			self.data = ""
+			self.nickList = []
 
-		self.SendServerMessage ("USER "+self.nick+" 8 * :"+self.nick)
-		self.SendServerMessage ("NICK "+self.nick)
+			self.SendServerMessage ("USER "+self.nick+" 8 * :"+self.nick)
+			self.SendServerMessage ("NICK "+self.nick)
+		except:			
+			return
 	
 	def Disconnect (self):
 		self.connectionState = 3

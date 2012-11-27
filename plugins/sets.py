@@ -44,6 +44,7 @@ lastRandSetMinute = -1
 lastRandSetCount = 0
 @command ("randset", 0)
 def c (ircbot, args):
+	if ircbot.mute: return
 	global lastRandSetMinute, lastRandSetCount
 	
 	minute = int(time.time () / 60)
@@ -53,7 +54,7 @@ def c (ircbot, args):
 	
 	lastRandSetCount += 1
 	if lastRandSetCount > 3:
-		ircbot.Reply (u"Only 3 randset's per minute! ;p")
+		ircbot.Reply (u"Only 3 randsets per minute! ;p")
 		return
 	
 	sets = pm.GetData ("sets", {})
@@ -103,5 +104,8 @@ def c123 (ircbot, sender, prompt, text):
 		args = argsStr.strip ()
 		if len(args) > 0:
 			r = r.replace ("***", args)
+		
+		if text == "KD2":
+			ircbot.Kick ("stosowana", sender, u"ha! tego się nie spodziewałeś!")
 
 		ircbot.Reply (r)

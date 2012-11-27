@@ -1,6 +1,6 @@
 # coding=utf-8
 from ext import *
-import datetime, re, time, select, random, os, json, time
+import datetime, re, time, select, random, os, json, time, urllib2
 from subprocess import *
 import utils
 
@@ -62,7 +62,7 @@ def c (ircbot, args):
 	ircbot.Reply (str(datetime.datetime.now ()))
 	
 @command ("rand", 0)
-@desc ("Zwraca losową liczbę z zakresu 1-6")
+@desc (u"Zwraca losową liczbę z zakresu 1-6")
 def c (ircbot, args):
 	if ircbot.mute: return
 	ircbot.Reply ("4")
@@ -125,6 +125,7 @@ def c (ircbot, args):
 
 bch = None
 
+"""
 @command ("c", 1)
 def c (ircbot, args):
 	if ircbot.mute: return
@@ -164,15 +165,42 @@ def c (ircbot, args):
 			res = "!!! (err: {0})".format (err)
 	
 	ircbot.SendChannelMessage ("#stosowana", res)
+"""
 
 lastNick = None
 lastNick2 = None
+lastDMessage = ""
 
+@command ("makefun", 0)
+def c (ircbot, args):
+	global lastDMessage
+	lastDMessage = ""
+
+@command ("reverse", 1)
+def c (ircbot, args):
+	ircbot.Reply (args[0][::-1])
+	
 @handler ("message_public")
 def c (ircbot, sender, message):
-	global lastNick, lastNick2
+	global lastNick, lastNick2, lastDMessage
 	lastNick2 = lastNick
 	lastNick = sender
+	
+	if ircbot.mute: return
+	if sender == "kdbot":
+		return
+	if sender == "Kajtek":
+		message = message.strip ()
+	nofun = False
+	for c in message:
+		if c != '.':
+			nofun = True
+		
+	if not nofun:
+		if len(message) != len(lastDMessage) + 1:
+			ircbot.Kick ("stosowana", sender, ":D")
+		else:
+			lastDMessage = message
 
 @command ("slap", 0)
 def c (ircbot, args):
@@ -248,3 +276,7 @@ def c (ircbot, args):
 	for i in xrange (50):
 		s += random.choice ("()")
 	ircbot.Reply ("(" + s + ")")
+
+@command ("temp", 0)
+def c (ircbot, args):
+	ircbot.Reply (urllib2.urlopen ("http://83.175.189.46:3434/outtemp.php").read () + u"°C");

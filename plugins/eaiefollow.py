@@ -50,8 +50,7 @@ def c (ircbot, args):
 	ircbot.Reply ("ok")
 	
 @timed ("eaiefollow", 60000)
-def c (ircbot):
-	print stos_user
+def c (ircbot):	
 	data = pm.GetData ("follows", [[], []])
 
 	cj = cookielib.LWPCookieJar ("followercookie.txt")
@@ -92,14 +91,46 @@ def c (ircbot):
 			idx = idx + m.end ()
 			
 			author = m.group (1).decode ("utf-8")
+			#print author
 			author = re.sub ("<[^>]+>", "", author)
 			author = author.strip ()
-						
+			
+			m = re.search ("<div class=\"postbody\"[^>]*>(.*?)<br clear=\"all\" />", cnt[idx:], re.S)
+			body = ""
+			if m is not None:
+				body = m.group (1).decode ("utf-8")
+				body = body.replace ("<br />", " ")
+				body = body.replace ("\n", " ")
+				body = body.replace ("\t", " ")
+				body = body.replace ("&gt;", ">").replace ("&lt;", ">").replace ("&amp;", "&").replace ("&quot;", "\"").replace ("&nbsp;", " ")
+				body = re.sub ("<[^>]+>", "", body)
+				
+				sigIdx = body.find ("_________________")
+				if sigIdx != -1:
+					body = body[:sigIdx-1]
+				
+				body = body.strip ()
+				while "  " in body:
+					body = body.replace ("  ", " ")
+				if len(body) > 150:
+					i = 150
+					while i > 0 and body[i] != " ":
+						i = i - 1
+					if i > 0:
+						body = body[:i].strip () + " (...)"
+					else:
+						body = ""
+				idx = idx + m.end ()
+			
+			print author, body
+			
 			destLink = link + "#" + id
 			if destLink not in data[1]:
 				if not linkData["first"]:
 					shortUrl = utils.GetShortLink (destLink)
 					ircbot.SendChannelMessage ("#stosowana", u"Nowy post: #{0}# @{2}@ --- {1}".format (linkData["title"], shortUrl, author))
+					if len(body) > 0:
+						ircbot.SendChannelMessage ("#stosowana", u"% {body} %".format (body=body))
 				
 				data[1].append (destLink)
 		

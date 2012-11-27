@@ -54,7 +54,7 @@ class IRCBot(IRCClient.IRCClient):
 			info = u" (quit: {why})".format (why=why)
 		self.AppendToIRCLog (u"--- {sender} left the room".format (sender=who, info=info))
 	def OnUserKicked (self, whoKicked, who, why):
-		self.onChannel = False		 
+		#self.onChannel = False
 		info = u""
 		if len(why) > 0:
 			info = u" ({why})".format (why=why)
@@ -137,12 +137,15 @@ class IRCBot(IRCClient.IRCClient):
 			if self.onChannel:
 				for plugin in self.pluginManager.commands:
 					if plugin["type"] == 3 and time.time () - plugin["lastDo"] > plugin["interval"] / 1000:
+						print plugin
 						try:
 							plugin["func"] (self)
 						except Exception as inst:
 							log.LogWarn ("Plugin {0} error: {1}".format (plugin["name"], inst))
 							traceback.print_exc (file=sys.stdout)
 						plugin["lastDo"] = time.time ()
+			else:
+				print "not on cha"
 			
 			self.Do ()
 			

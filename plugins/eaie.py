@@ -3,7 +3,7 @@ from ext import *
 import os, urllib2, urllib, re, json
 import utils
 
-@timed ("eaie", 30000)
+#@timed ("eaie", 30000)
 def c (ircbot):
 	data = pm.GetData ("eaie", [])
 	

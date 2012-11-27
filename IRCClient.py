@@ -7,6 +7,7 @@ class Nick:
 	nick = ""
 	op = False
 	voice = False
+	host = ""
 
 class IRCClient(object):
 	def __init__ (self, nick, channel, passwd=None):
@@ -67,7 +68,7 @@ class IRCClient(object):
 					self.SendServerMessage ("PRIVMSG NickServ :id " + self.passwd)
 			elif code == 353:
 				# Sprawdzenie czy lista nickow
-				res2 = re.match ("^[@=] #"+self.channel+" :(.+)$", msg)
+				res2 = re.match ("^. #"+self.channel+" :(.+)$", msg)
 				if res2:
 					#print "Nicki ok"
 					# Pobranie listy nickow i utworzenie obiektow
@@ -95,8 +96,8 @@ class IRCClient(object):
 		if res:
 			senderNick = res.group (1)
 			senderObj = self.GetUserByNick (res.group (1))
-			host = res.group (2)
-			msg = res.group (3)			
+			if senderObj is not None: senderObj.host = res.group (2)
+			msg = res.group (3)
 			
 			res2 = re.match ("^([A-Z]+) (.+)$", msg)
 			if res2:
@@ -211,7 +212,12 @@ class IRCClient(object):
 		except:
 			return
 		if self.sock in ready_read:
-			newData = self.sock.recv (100)
+			try:
+				newData = self.sock.recv (100)
+			except:
+				self.joinState = 0
+				self.connectionState = 0
+				return
 			if len (newData) == 0:
 				self.joinState = 0
 				self.connectionState = 0
@@ -277,3 +283,7 @@ class IRCClient(object):
 			self.SendServerMessage ("KICK #"+channel+" "+nick+" :"+comment)
 		else:
 			self.SendServerMessage ("KICK #"+channel+" "+nick)
+	def SetBan (self, channel, mask):
+			self.SendServerMessage ("MODE #"+channel+" +b "+pattern)
+	def UnsetBan (self, channel, mask):
+			self.SendServerMessage ("MODE #"+channel+" -b "+pattern)

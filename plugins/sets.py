@@ -3,6 +3,11 @@ from ext import *
 import datetime, re, time, select, random, os, json, time
 import utils
 
+@command ("cntset", 0)
+def c (ircbot, args):
+	sets = pm.GetData ("sets", {})
+	ircbot.Reply ("cnt: " + str(len(sets)))
+
 @command ("set", 2)
 def c (ircbot, args):
 	sets = pm.GetData ("sets", {})

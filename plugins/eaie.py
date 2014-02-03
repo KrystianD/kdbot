@@ -5,7 +5,7 @@ import utils
 
 #@timed ("eaie", 30000)
 def c (ircbot):
-	data = pm.GetData ("eaie", [])
+	data = pm.getData ("eaie", [])
 	
 	cnt = urllib2.urlopen ("http://www.eaie.agh.edu.pl/studia,informacje-dla-studentow.html").read ()
 
@@ -23,4 +23,4 @@ def c (ircbot):
 			
 			data.append (url)
 	
-	pm.SaveData ("eaie", data)
+	pm.saveData ("eaie", data)

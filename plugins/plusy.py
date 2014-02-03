@@ -29,7 +29,7 @@ def c(ircbot, match):
 
 	if userObj and ircbot.getLastSenderObj():
 		if ircbot.getLastSender() != nick:
-			data = pm.GetData("plusy", [])
+			data = pm.getData("plusy", [])
 			done = False
 			for rec in data:
 				if rec[0] == nick:
@@ -38,7 +38,7 @@ def c(ircbot, match):
 					break
 			if not done:
 				data.append([nick,1,0])
-			pm.SaveData("plusy", data)
+			pm.saveData("plusy", data)
 		else:
 			ircbot.reply("sure.")
 
@@ -51,7 +51,7 @@ def c(ircbot, args):
 	nick = args[0]
 	userObj = ircbot.getUserByNick(nick)
 	if userObj:
-		data = pm.GetData("plusy", [])
+		data = pm.getData("plusy", [])
 		done = False
 		for rec in data:
 			if rec[0] == nick:
@@ -60,12 +60,12 @@ def c(ircbot, args):
 				break
 		if not done:
 			data.append([nick,0,1])
-		pm.SaveData("plusy", data)
+		pm.saveData("plusy", data)
 		ircbot.reply("i see you, "+nick+"..")
 
 @command("plusy", 0)
 def c(ircbot, args):
-	data = pm.GetData("plusy", [])
+	data = pm.getData("plusy", [])
 	lines = []
 	for rec in sorted(data, key=lambda val: val[1], reverse=True):
 		if rec[1] != 0:
@@ -77,7 +77,7 @@ def c(ircbot, args):
 
 @command("warny", 0)
 def c(ircbot, args):
-	data = pm.GetData("warny", [])
+	data = pm.getData("warny", [])
 	lines = []
 	for rec in sorted(data, key=lambda val: val[2], reverse=True):
 		if rec[2] != 0:

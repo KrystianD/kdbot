@@ -8,9 +8,9 @@ def c(ircbot, args):
 	target = args[0]
 	message = args[1]
 	
-	data = pm.GetData("notes", [])
+	data = pm.getData("notes", [])
 	data.append([sender, target, message, datetime.datetime.now().strftime("%Y-%m-%d %H:%M")])
-	pm.SaveData("notes", data)
+	pm.saveData("notes", data)
 	
 	message2 = message
 	if len(message2) > 5:
@@ -22,7 +22,7 @@ def c(ircbot, args):
 @handler("message_public")
 def c(ircbot, sender, message):
 	if sender == "kdbot": return
-	data = pm.GetData("notes", [])
+	data = pm.getData("notes", [])
 	newData = []
 	for rec in data:
 		if rec[1].startswith(sender) or sender.startswith(rec[1]):
@@ -30,7 +30,7 @@ def c(ircbot, sender, message):
 		else:
 			newData.append(rec)
 	if len(data) != len(newData):
-		pm.SaveData("notes", newData)
+		pm.saveData("notes", newData)
 
 @handler("user_join")
 def c(ircbot, who):
@@ -40,7 +40,7 @@ def c(ircbot, who):
 @handler("user_join")
 def c(ircbot, who):
 	sender = who
-	data = pm.GetData("notes", [])
+	data = pm.getData("notes", [])
 	newData = []
 	for rec in data:
 		if rec[1].startswith(sender) or sender.startswith(rec[1]):
@@ -48,4 +48,4 @@ def c(ircbot, who):
 		else:
 			newData.append(rec)
 	if len(data) != len(newData):
-		pm.SaveData("notes", newData)
+		pm.saveData("notes", newData)

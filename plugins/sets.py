@@ -5,12 +5,12 @@ import utils
 
 @command("cntset", 0)
 def c(ircbot, args):
-	sets = pm.GetData("sets", {})
+	sets = pm.getData("sets", {})
 	ircbot.reply("cnt: " + str(len(sets)))
 
 @command("set", 2)
 def c(ircbot, args):
-	sets = pm.GetData("sets", {})
+	sets = pm.getData("sets", {})
 	
 	"""
 	for key in sets.keys():
@@ -18,32 +18,32 @@ def c(ircbot, args):
 		if type(val) != type(dict()):
 			sets[key] = { "value": val }
 	print sets
-	pm.SaveData("sets", sets)
+	pm.saveData("sets", sets)
 	"""
 	
 	if args[0] in sets and sets[args[0]]["value"][0] == "@":
 		ircbot.reply("locked!")
 		return
 	sets[args[0]] = { "value": args[1].lstrip("@"), "user": ircbot.getLastSender(), "time": time.time() }
-	pm.SaveData("sets", sets)
+	pm.saveData("sets", sets)
 
 @command("unset", 1)
 def c(ircbot, args):
 	if not ircbot.getLastSenderObj() or not ircbot.getLastSenderObj().op:
 		return
 	
-	sets = pm.GetData("sets", {})
+	sets = pm.getData("sets", {})
 	if args[0] in sets:
 		del sets[args[0]]
-		pm.SaveData("sets", sets)
+		pm.saveData("sets", sets)
 
 @command("lock", 1)
 def c(ircbot, args):
-	sets = pm.GetData("sets", {})
+	sets = pm.getData("sets", {})
 	if args[0] in sets and sets[args[0]]["value"][0] != "@":
 		sets[args[0]]["value"] = "@" + sets[args[0]]["value"]
 		ircbot.reply("done!")
-		pm.SaveData("sets", sets)
+		pm.saveData("sets", sets)
 
 lastRandSetMinute = -1
 lastRandSetCount = 0
@@ -62,7 +62,7 @@ def c(ircbot, args):
 		ircbot.reply(u"Only 3 randsets per minute! ;p")
 		return
 	
-	sets = pm.GetData("sets", {})
+	sets = pm.getData("sets", {})
 	key = random.choice(sets.keys())
 	entry = sets[key]
 	val = entry["value"]
@@ -72,7 +72,7 @@ def c(ircbot, args):
 
 @command("infoset", 1)
 def c(ircbot, args):
-	sets = pm.GetData("sets", {})
+	sets = pm.getData("sets", {})
 	key = args[0]
 	if key in sets:
 		entry = sets[key]
@@ -96,7 +96,7 @@ def c(ircbot, sender, prompt, cmd, argsStr):
 def c123(ircbot, sender, prompt, text):
 	if ircbot.mute: return
 	if prompt != "!": return
-	sets = pm.GetData("sets", {})
+	sets = pm.getData("sets", {})
 	parts = text.split(' ', 1)
 	text = parts[0]
 	argsStr = ""

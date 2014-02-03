@@ -23,7 +23,7 @@ class IRCBot(IRCClient.IRCClient):
 		self.commands = Queue.Queue()
 		
 	def reloadPlugins(self):
-		self.pluginManager.Reload()
+		self.pluginManager.reload()
 	
 	def handleSignal(self, signal, *args):
 		if self.signalBeingProceed is not None: return
@@ -113,7 +113,7 @@ class IRCBot(IRCClient.IRCClient):
 								log.LogWarn("Plugin {0} error: {1}".format(plugin["name"], inst))
 								traceback.print_exc(file=sys.stdout)
 						else:
-							self.Reply(self.pluginManager.GetUsage(plugin))
+							self.Reply(self.pluginManager.getUsage(plugin))
 		if not managed:
 			if cmd is not None:
 				self.handleSignal("unknown_command", sender, prompt, cmd, argsStr)

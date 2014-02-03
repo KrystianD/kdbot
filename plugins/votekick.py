@@ -71,7 +71,7 @@ def c (ircbot, sender, message):
 				ircbot.Reply (sender + ": ...")
 		
 		if voteKick["votesY"] > voteKick["votesTotal"] / 2:
-			ircbot.Kick ("stosowana", voteKick["target"], "sorry, that's democracy!")
+			ircbot.Kick ("hackerspace-krk", voteKick["target"], "sorry, that's democracy!")
 			voteKick = None
 		
 		print voteKick

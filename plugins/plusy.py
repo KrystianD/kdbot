@@ -21,45 +21,50 @@ def SaveData (data):
 		file.write ("{0},{1},{2}\n".format (record[0], record[1], record[2]))
 	file.close ()
 
-@command_regex ("^([^ ]*)\+\+$")
+@command_regex ("^([^ +]{1,})\+\+")
 def c (ircbot, match):
 	nick = match.group (1)	
 	userObj = ircbot.GetUserByNick (nick)
+	print nick, userObj
 
-	if userObj:
-		data = LoadData ()
-		done = False
-		for rec in data:
-			if rec[0] == nick:
-				rec[1] = rec[1] + 1
-				done = True
-				break
-		if not done:
-			data.append ([nick,1,0])
-		SaveData (data)
+	if userObj and ircbot.GetLastSenderObj ():
+		if ircbot.GetLastSender () != nick:
+			data = LoadData ()
+			done = False
+			for rec in data:
+				if rec[0] == nick:
+					rec[1] = rec[1] + 1
+					done = True
+					break
+			if not done:
+				data.append ([nick,1,0])
+			SaveData (data)
+		else:
+			ircbot.Reply ("sure.")
 
-@command_regex ("^([^ ]*)\-\-$")
+@command_regex ("^([^ -]{1,})\-\-")
 def c (ircbot, match):
-	nick = match.group (1)	
-	userObj = ircbot.GetUserByNick (nick)
+	ircbot.Reply ("no hablo")
+	# nick = match.group (1)	
+	# userObj = ircbot.GetUserByNick (nick)
 
-	if userObj and ircbot.GetLastSenderObj () and ircbot.GetLastSender () != nick:
-		if not ircbot.GetLastSenderObj ().op:
-			ircbot.Reply ("not this way !! - become a god!")
-			return
-		data = LoadData ()
-		done = False
-		for rec in data:
-			if rec[0] == nick:
-				rec[1] = rec[1] - 1
-				done = True
-				break
-		if not done:
-			data.append ([nick,-1,0])
-		SaveData (data)
-		ircbot.Reply ("ye!!")
+	# if userObj and ircbot.GetLastSenderObj () and ircbot.GetLastSender () != nick:
+		# if not ircbot.GetLastSenderObj ().op:
+			# ircbot.Reply ("not this way !! - become a god!")
+			# return
+		# data = LoadData ()
+		# done = False
+		# for rec in data:
+			# if rec[0] == nick:
+				# rec[1] = rec[1] - 1
+				# done = True
+				# break
+		# if not done:
+			# data.append ([nick,-1,0])
+		# SaveData (data)
+		# ircbot.Reply ("ye!!")
 		
-@command ("szkla", 1)
+@command ("warn", 1)
 def c (ircbot, args):
 	nick = args[0]
 	userObj = ircbot.GetUserByNick (nick)
@@ -74,17 +79,17 @@ def c (ircbot, args):
 		if not done:
 			data.append ([nick,0,1])
 		SaveData (data)
-		ircbot.Reply ("i see you, "+nick+".. - szkla")
+		ircbot.Reply ("i see you, "+nick+"..")
 
-@command ("kajtekzero", 0)
-def c (ircbot, args):
-	data = LoadData ()
-	for rec in data:
-		if rec[0] == "Kajtek" and rec[1] > 0:
-			rec[1] = 0
-			break
-	SaveData (data)
-	ircbot.Reply ("tak")
+# @command ("kajtekzero", 0)
+# def c (ircbot, args):
+	# data = LoadData ()
+	# for rec in data:
+		# if rec[0] == "Kajtek" and rec[1] > 0:
+			# rec[1] = 0
+			# break
+	# SaveData (data)
+	# ircbot.Reply ("tak")
 	
 @command ("plusy", 0)
 def c (ircbot, args):
@@ -92,7 +97,10 @@ def c (ircbot, args):
 	lines = []
 	for rec in sorted (data, key=lambda val: val[1], reverse=True):
 		if rec[1] != 0:
-			lines.append (rec[0]+" = "+str(rec[1]))
+			nick = rec[0]
+			mid = int(len(nick) / 2)
+			nick = nick[0:mid] + u"\u200b" + nick[mid:]
+			lines.append (nick+" = "+str(rec[1]))
 	ircbot.Reply (", ".join (lines))
 
 @command ("warny", 0)
@@ -101,5 +109,8 @@ def c (ircbot, args):
 	lines = []
 	for rec in sorted (data, key=lambda val: val[2], reverse=True):
 		if rec[2] != 0:
-			lines.append (rec[0]+" = "+str(rec[2]))
+			nick = rec[0]
+			mid = int(len(nick) / 2)
+			nick = nick[0:mid] + u"\u200b" + nick[mid:]
+			lines.append (nick+" = "+str(rec[2]))
 	ircbot.Reply (", ".join (lines))

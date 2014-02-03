@@ -6,7 +6,7 @@ import datetime
 lastLines = []
 lastLinesNT = []
 
-dataDir = "/home/krystiand/domains/stosowana.krystiand.net/saves"
+dataDir = "/home/krystiand/domains/hskrk/saves"
 
 def AppendLine (msg):
 	global lastLines
@@ -17,7 +17,7 @@ def AppendLine (msg):
 	while len(lastLinesNT) > 20: del lastLinesNT[0]
 
 @command ("save", 0)
-@desc ("http://stosowana.krystiand.net/saves")
+@desc ("http://hskrk.krystiand.net/saves")
 def c (ircbot, args):
 	global lastLines
 	sender = ircbot.GetLastSender ()
@@ -34,6 +34,7 @@ def c (ircbot, args):
 	file.close ()	
 	
 	print filePath
+	ircbot.Reply ("saved!")
 
 @command ("log", 0)
 def c (ircbot, args):

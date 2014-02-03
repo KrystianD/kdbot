@@ -3,3 +3,4 @@ config.py
 followercookie.txt
 a.txt
 plugins_data/
+log/

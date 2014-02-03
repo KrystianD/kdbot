@@ -34,6 +34,11 @@ def c (ircbot, sender, message):
 
 @handler ("user_join")
 def c (ircbot, who):
+    if who == "marchewa":
+        ircbot.Reply (u"marchewa: cycki!")
+
+@handler ("user_join")
+def c (ircbot, who):
 	sender = who
 	data = pm.GetData ("notes", [])
 	newData = []

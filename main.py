@@ -1,5 +1,5 @@
 # coding=utf-8
-import re, time
+import re, time, random
 import IRCClient
 import ext
 import utils, plugin
@@ -209,6 +209,8 @@ class CLI(threading.Thread):
 
 # signal.signal(signal.SIGINT, signal.SIG_IGN)
 #signal.signal(signal.SIGTERM, signal.SIG_IGN)
+
+random.seed()
 
 client = IRCBot("sendak.freenode.net", 6667, irc_nick, irc_channel)
 ext.pm = client.pluginManager

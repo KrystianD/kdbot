@@ -6,72 +6,70 @@ import utils
 
 voteKick = None
 
-@command ("votekick", 1)
-def c (ircbot, args):
+@command("votekick", 1)
+def c(ircbot, args):
 	global voteKick
-	if voteKick != None and time.time () - voteKick["time"] >= 60:
+	if voteKick != None and time.time() - voteKick["time"] >= 60:
 		voteKick = None
 		
-	sender = ircbot.getLastSender ()
+	sender = ircbot.getLastSender()
 			
-	userObj = ircbot.getUserByNick (args[0])
-	if userObj:
+	user = ircbot.getUserByNick(args[0])
+	if user:
 		if voteKick != None:
 			if voteKick["target"] != sender:
-				ircbot.Reply ("oh, damn :(")
+				ircbot.reply("oh, damn :(")
 				return
 			if voteKick["target"] == sender:
-				ircbot.Reply ("ofkoz.")
+				ircbot.reply("ofkoz.")
 				return
 		
-		if userObj.nick == "kdbot":
-			ircbot.Reply (u"a takiego wała!")
+		if user.nick == ircbot.getNick():
+			ircbot.reply(u"a takiego wała!")
 			return
 		
-		ircbot.Reply ("OK! let's try - everyone says y/n")
+		ircbot.reply("OK! let's try - everyone says y/n")
 		
-		nicks = ircbot.getNickList ()
-		nicks2 = []
-		for nick in nicks: nicks2.append (nick.nick)
-		nicks2.remove (userObj.nick)
-		if sender in nicks2: nicks2.remove (sender)
-		if "kdbot" in nicks2: nicks2.remove ("kdbot")
-		if "kdbot2" in nicks2: nicks2.remove ("kdbot2")
+		nicksList = []
+		for nick in ircbot.getNickList(): nicksList.append(nick.nick)
+		nicksList.remove(user.nick)
+		if sender in nicksList: nicksList.remove(sender)
+		if ircbot.getNick() in nicksList: nicksList.remove(ircbot.getNick())
 		
 		voteKick = {
-			"time": time.time (),
-			"target": userObj.nick,
-			"allowed": nicks2,
-			"votesTotal": len(nicks2) + 1,
+			"time": time.time(),
+			"target": user.nick,
+			"allowed": nicksList,
+			"votesTotal": len(nicksList) + 1,
 			"votesY": 1,
 			"votesN": 0,
 		}
 		print voteKick
 		#MODE #stosowana +b *!*@*
 
-@handler ("message_public")
-def c (ircbot, sender, message):
+@handler("message_public")
+def c(ircbot, sender, message):
 	global voteKick
-	if voteKick != None and time.time () - voteKick["time"] >= 60:
+	if voteKick != None and time.time() - voteKick["time"] >= 60:
 		voteKick = None
 	
-	sender = ircbot.getLastSender ()
+	sender = ircbot.getLastSender().nick
 	if voteKick != None:
 		if message == "y" or message == "n":			
 			if sender in voteKick["allowed"]:
 				if message == "y":
 					voteKick["votesY"] += 1
-					voteKick["allowed"].remove (sender)
-					ircbot.Reply ("got it! ~~ {0}/{1}".format (voteKick["votesY"], voteKick["votesTotal"]))
+					voteKick["allowed"].remove(sender)
+					ircbot.reply("got it! ~~ {0}/{1}".format(voteKick["votesY"], voteKick["votesTotal"]))
 				elif message == "n":
 					voteKick["votesN"] += 1
-					voteKick["allowed"].remove (sender)
-					ircbot.Reply ("got it! ~~ {0}/{1}".format (voteKick["votesY"], voteKick["votesTotal"]))
+					voteKick["allowed"].remove(sender)
+					ircbot.reply("got it! ~~ {0}/{1}".format(voteKick["votesY"], voteKick["votesTotal"]))
 			else:
-				ircbot.Reply (sender + ": ...")
+				ircbot.reply(sender + ": ...")
 		
 		if voteKick["votesY"] > voteKick["votesTotal"] / 2:
-			ircbot.Kick ("hackerspace-krk", voteKick["target"], "sorry, that's democracy!")
+			ircbot.Kick(irc_channel, voteKick["target"], "sorry, that's democracy!")
 			voteKick = None
 		
 		print voteKick

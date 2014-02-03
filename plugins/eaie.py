@@ -24,3 +24,9 @@ def c (ircbot):
 			data.append (url)
 	
 	pm.saveData ("eaie", data)
+
+# @command("gurgul", 0)
+# def c(ircbot, args):
+	# if ircbot.mute: return
+	# data = [u"mówi", u"słyszy", u"dzwoni", u"widzi", u"wie", u"dosięgnie", u"ogarnia", u"pomoże"]
+	# ircbot.reply(u"{0}: {1}".format(ircbot.GetLastSender(), random.choice(["Bubargul ", "Gurgul "]) + random.choice(data)))

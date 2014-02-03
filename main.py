@@ -127,9 +127,9 @@ class IRCBot(IRCClient.IRCClient):
 	
 	def onPrivateMessage(self, sender, message):
 		if hashlib.md5(message.encode("utf-8")).hexdigest() == "11973b068362eb2e581f0de41b1e50f7":
-			self.pluginManager.Reload()
+			self.pluginManager.reload()
 		elif hashlib.md5(message.encode("utf-8")).hexdigest() == "1240835963712cdc4c5bcfbafc4764cb":
-			self.Disconnect()
+			self.disconnect()
 	
 	def run(self):
 		while self.connectionState != 4:

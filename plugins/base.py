@@ -25,7 +25,7 @@ def c(ircbot, args):
 
 @command("mute", 1)
 def c(ircbot, args):
-	if not ircbot.getLastSenderObj() or not ircbot.getLastSenderObj().op:
+	if not ircbot.getLastSender().op:
 		return
 	
 	if args[0] == "1":
@@ -125,8 +125,7 @@ def c(ircbot, args):
 @command("say", 1)
 def c(ircbot, args):
 	if ircbot.mute: return
-	if ircbot.getLastSender():
-		ircbot.reply(ircbot.getLastSender() + " forced me to say: " + args[0])
+	ircbot.reply(ircbot.getLastSender().nick + " forced me to say: " + args[0])
 
 @command("lisp", 0)
 def c(ircbot, args):

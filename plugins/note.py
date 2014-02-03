@@ -4,7 +4,7 @@ import os, json, datetime
 
 @command("note", 2)
 def c(ircbot, args):
-	sender = ircbot.getLastSender()
+	sender = ircbot.getLastSender().nick
 	target = args[0]
 	message = args[1]
 	
@@ -22,11 +22,13 @@ def c(ircbot, args):
 @handler("message_public")
 def c(ircbot, sender, message):
 	if sender == "kdbot": return
+	sender = sender.lower()
 	data = pm.getData("notes", [])
 	newData = []
 	for rec in data:
-		if rec[1].startswith(sender) or sender.startswith(rec[1]):
-			ircbot.reply(u"{0}->{1}: {2}(at {3})".format(rec[0], rec[1], rec[2], rec[3]))
+		recNick = rec[1].lower()
+		if recNick.startswith(sender) or sender.startswith(recNick):
+			ircbot.reply(u"{0}->{1}: {2} (at {3})".format(rec[0], rec[1], rec[2], rec[3]))
 		else:
 			newData.append(rec)
 	if len(data) != len(newData):
@@ -34,17 +36,14 @@ def c(ircbot, sender, message):
 
 @handler("user_join")
 def c(ircbot, who):
-	if who == "marchewa":
-		ircbot.reply(u"marchewa: cycki!")
-
-@handler("user_join")
-def c(ircbot, who):
 	sender = who
+	sender = sender.lower()
 	data = pm.getData("notes", [])
 	newData = []
 	for rec in data:
-		if rec[1].startswith(sender) or sender.startswith(rec[1]):
-			ircbot.reply(u"{0}->{1}: {2}(at {3})".format(rec[0], rec[1], rec[2], rec[3]))
+		recNick = rec[1].lower()
+		if recNick.startswith(sender) or sender.startswith(recNick):
+			ircbot.reply(u"{0}->{1}: {2} (at {3})".format(rec[0], rec[1], rec[2], rec[3]))
 		else:
 			newData.append(rec)
 	if len(data) != len(newData):

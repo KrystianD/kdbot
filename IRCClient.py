@@ -8,6 +8,10 @@ class Nick:
 	op = False
 	voice = False
 	host = ""
+	onChannel = False
+
+	def __str__(self):
+		return self.nick
 
 DISCONNECTED = 0
 CONNECTED = 1
@@ -83,7 +87,7 @@ class IRCClient(object):
 				self.connectionState = 2
 				self.onConnected()
 				if self.passwd is not None:
-					self.sendServerMessage("PRIVMSG NickServ :id " + self.passwd)
+					self.sendServerMessage("PRIVMSG NickServ :id {}".format(self.passwd))
 			elif code == 353:
 				# Sprawdzenie czy lista nickow
 				res2 = re.match("^. #"+self.channel+" :(.+)$", msg)
@@ -91,19 +95,23 @@ class IRCClient(object):
 					#print "Nicki ok"
 					# Pobranie listy nickow i utworzenie obiektow
 					list = res2.group(1)
-					nickList = list.split(" ")
-					self.nickList = []
-					for nick in nickList:
-						senderObj = Nick()
-						if nick[0] == "@":
-							senderObj.nick = nick[1:]
-							senderObj.op = True
-						elif nick[0] == "+":
-							senderObj.nick = nick[1:]
-							senderObj.voice = True
+					currentUsers = []
+					for channelNick in list.split(" "):
+						user = self.getUserByNick(channelNick.strip("@+"))
+						user.onChannel = True
+						if channelNick[0] == "@":
+							user.nick = channelNick[1:]
+							user.op = True
+						elif channelNick[0] == "+":
+							user.nick = channelNick[1:]
+							user.voice = True
 						else:
-							senderObj.nick = nick
-						self.nickList.append(senderObj);
+							user.nick = channelNick 
+						currentUsers.append(user.nick)
+
+					print("bef: " + str(len(self.nickList)))
+					self.nickList = filter(lambda x: x.nick in currentUsers, self.nickList)
+					print("aft: " + str(len(self.nickList)))
 			
 			elif code == 433:
 				if "Nickname is already in use." in msg:
@@ -172,7 +180,7 @@ class IRCClient(object):
 				
 				# PRIVMSG
 				elif cmd == "PRIVMSG":
-					self.lastSender = senderNick
+					self.lastSender = self.getUserByNick(senderNick)
 					# Wiadomosc publiczna
 					res3 = re.match("^#([^ ]+) :(.+)$", cmdVal)
 					if res3:
@@ -256,10 +264,10 @@ class IRCClient(object):
 		if len(msg) == 0: return
 		if not self.onBeforeSendServerMessage(msg):
 			return
-		self.sock.send(msg.encode("utf-8")+"\r\n")
-		self.onSendServerMessage(msg)
+		self.sock.send(msg.encode("utf-8") + "\r\n")
+		self.onSendServerMessage(msg) 
 	def requestNickList(self):
-		self.sendServerMessage("NAMES #"+self.channel)
+		self.sendServerMessage("NAMES #{}".format(self.channel))
 	
 	# Handlery
 	def onConnected(self): pass
@@ -281,9 +289,12 @@ class IRCClient(object):
 		for nickObj in self.nickList:
 			if nickObj.nick == nick:
 				return nickObj
-		return None
+		user = Nick()
+		user.nick = nick
+		user.onChannel = False
+		self.nickList.append(user)
+		return user
 	def getLastSender(self): return self.lastSender
-	def getLastSenderObj(self): return self.getUserByNick(self.lastSender)
 	
 	# Komendy
 	def sendChannelMessage(self, channel, msg):

@@ -17,19 +17,25 @@ def c(ircbot, args):
 	lastRead = time.time()
 	while time.time() - lastRead < 0.5 and time.time() - startTime < 5:
 		p.poll()
-		print "ret:", p.returncode
-		if p.returncode == 0:
-			break
+		# print "ret:", p.returncode
 		
-		q = select.select([p.stdout, p.stderr], [], [], 0.1)
+		q = select.select([p.stdout, p.stderr], [], [], 0.2)
 		if p.stdout in q[0]:
-			out += p.stdout.read(1)
-			lastRead = time.time()
-			print "out:", out
+			buf = p.stdout.read(100)
+			if len(buf) > 0:
+				out += buf
+				lastRead = time.time()
+				print "out:", out
+			else:
+				break
 		if p.stderr in q[0]:
-			err += p.stderr.read(1)
-			lastRead = time.time()
-			print "err:", err
+			buf = p.stderr.read(100)
+			if len(buf) > 0:
+				err += buf
+				lastRead = time.time()
+				print "err:", err
+			else:
+				break
 
 	p.poll()
 	if p.returncode == None:
@@ -43,4 +49,4 @@ def c(ircbot, args):
 		if len(err) > 0:
 			res = "!!!(err: {0})".format(err)
 	
-	ircbot.sendChannelMessage("#stosowana", res)
+	ircbot.reply(res)

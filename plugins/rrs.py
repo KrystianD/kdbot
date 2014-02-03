@@ -40,7 +40,6 @@ def c(ircbot, args):
 		ircbot.reply("empty!")
 		return
 	
-	s = ircbot.getLastSender()
 	if rr1 == rr2 or random.randint(1, rr2) <= rr1:
 		rr1 = rr1 - 1
 		rr2 = rr2 - 1

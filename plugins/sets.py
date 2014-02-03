@@ -29,7 +29,7 @@ def c(ircbot, args):
 
 @command("unset", 1)
 def c(ircbot, args):
-	if not ircbot.getLastSenderObj() or not ircbot.getLastSenderObj().op:
+	if not ircbot.getLastSender().op:
 		return
 	
 	sets = pm.getData("sets", {})

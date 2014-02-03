@@ -19,7 +19,7 @@ def appendLine(msg):
 @desc("http://hskrk.krystiand.net/saves")
 def c(ircbot, args):
 	global lastLines
-	sender = ircbot.getLastSender()
+	sender = ircbot.getLastSender().nick
 	i = 0
 	while True:
 		filePath = os.path.join(dataDir, "{0:04}.txt".format(i))

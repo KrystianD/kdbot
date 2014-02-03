@@ -3,8 +3,8 @@ import re, time, random
 import IRCClient
 import ext
 import utils, plugin
-import logger, datetime, glob, imp, os, hashlib, sys, traceback, select, threading, readline, Queue, signal
-execfile('config.py')
+import logger, datetime, glob, imp, os, hashlib, sys, traceback, select, threading, readline, queue, signal
+exec(compile(open('config.py').read(), 'config.py', 'exec'))
 
 log = logger.Logger()
 log.AddHandler(logger.ConsoleHandler())
@@ -20,7 +20,7 @@ class IRCBot(IRCClient.IRCClient):
 		super(IRCBot, self).__init__(host, port, nick, channel, passwd)
 		self.pluginManager = plugin.PluginManager()
 		self.buf = ""
-		self.commands = Queue.Queue()
+		self.commands = queue.Queue()
 		
 	def reloadPlugins(self):
 		self.pluginManager.reload()
@@ -38,27 +38,27 @@ class IRCBot(IRCClient.IRCClient):
 				self.signalBeingProceed = None
 	
 	def onConnected(self):
-		print "con!"
+		print("con!")
 	def onJoined(self):
 		self.onChannel = True
-		print "join!"
+		print("join!")
 	def onKick(self, who, why):
 		self.onChannel = False		
 	def onUserJoined(self, who):
 		self.handleSignal("user_join", who)
-		self.appendToIRCLog(u"--- {sender} entered the room".format(sender=who))
+		self.appendToIRCLog("--- {sender} entered the room".format(sender=who))
 	def onUserLeave(self, who, why):
 		self.handleSignal("user_leave", who, why)
-		info = u""
+		info = ""
 		if len(why) > 0:
-			info = u"(quit: {why})".format(why=why)
-		self.appendToIRCLog(u"--- {sender} left the room".format(sender=who, info=info))
+			info = "(quit: {why})".format(why=why)
+		self.appendToIRCLog("--- {sender} left the room".format(sender=who, info=info))
 	def onUserKicked(self, whoKicked, who, why):
 		#self.onChannel = False
-		info = u""
+		info = ""
 		if len(why) > 0:
-			info = u"({why})".format(why=why)
-		self.appendToIRCLog(u"--- {who} left the room (Kicked by {whoKicked}{info})".format(who=who, whoKicked=whoKicked, info=info))
+			info = "({why})".format(why=why)
+		self.appendToIRCLog("--- {who} left the room (Kicked by {whoKicked}{info})".format(who=who, whoKicked=whoKicked, info=info))
 		
 	def onServerMessage(self, message):
 		log.LogInfo("--> " + message)
@@ -68,7 +68,7 @@ class IRCBot(IRCClient.IRCClient):
 		pass
 	
 	def onPublicMessage(self, channel, sender, message):
-		self.appendToIRCLog(u"<{0}> {1}".format(sender, message))
+		self.appendToIRCLog("<{0}> {1}".format(sender, message))
 		
 		self.handleSignal("message_public", sender, message)
 		
@@ -113,7 +113,7 @@ class IRCBot(IRCClient.IRCClient):
 								log.LogWarn("Plugin {0} error: {1}".format(plugin["name"], inst))
 								traceback.print_exc(file=sys.stdout)
 						else:
-							self.Reply(self.pluginManager.getUsage(plugin))
+							self.reply(self.pluginManager.getUsage(plugin))
 		if not managed:
 			if cmd is not None:
 				self.handleSignal("unknown_command", sender, prompt, cmd, argsStr)
@@ -136,7 +136,7 @@ class IRCBot(IRCClient.IRCClient):
 			if self.onChannel:
 				for plugin in self.pluginManager.commands:
 					if plugin["type"] == 3 and time.time() - plugin["lastDo"] > plugin["interval"] / 1000:
-						print plugin
+						print(plugin)
 						try:
 							plugin["func"](self)
 						except Exception as inst:
@@ -144,7 +144,7 @@ class IRCBot(IRCClient.IRCClient):
 							traceback.print_exc(file=sys.stdout)
 						plugin["lastDo"] = time.time()
 			else:
-				print "not on cha"
+				print("not on cha")
 			
 			self.process()
 
@@ -165,8 +165,8 @@ class IRCBot(IRCClient.IRCClient):
 		dateStr = datetime.datetime.today().strftime("%Y-%m-%d")
 		file = open(logs_dir + "/" + dateStr + ".log", "ab")
 		timeStr = datetime.datetime.now().strftime("%H:%M:%S")
-		msg = "[{0}] {1}\r\n".format(timeStr, msg.encode("utf-8"))
-		file.write(msg)
+		msg = "[{0}] {1}\r\n".format(timeStr, msg)
+		file.write(msg.encode("utf-8"))
 		file.close()
 	
 	def appendCLICommand(self, cmd):
@@ -200,7 +200,7 @@ class CLI(threading.Thread):
 		readline.parse_and_bind("")
 		while True:
 			try:
-				cmd = raw_input("> ")
+				cmd = input("> ")
 				self.client.appendCLICommand(cmd.strip())
 				if cmd == "quit":
 					break

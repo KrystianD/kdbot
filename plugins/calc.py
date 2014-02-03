@@ -1,6 +1,6 @@
 # coding=utf-8
 from ext import *
-import datetime, re, time, select, random, os, json, time, urllib2
+import datetime, re, time, select, random, os, json, time, urllib.request, urllib.error, urllib.parse
 from subprocess import *
 import utils
 
@@ -8,7 +8,7 @@ import utils
 def c(ircbot, args):
 	if ircbot.mute: return
 	p = Popen(["/usr/bin/bc", "-l"], stdout=PIPE, stdin=PIPE, stderr=PIPE, bufsize=0)
-	p.stdin.write(args[0] + "\n")
+	p.stdin.write((args[0] + "\n").encode("ascii"))
 	p.stdin.close()
 	out = ""
 	err = ""
@@ -21,25 +21,25 @@ def c(ircbot, args):
 		
 		q = select.select([p.stdout, p.stderr], [], [], 0.2)
 		if p.stdout in q[0]:
-			buf = p.stdout.read(100)
+			buf = p.stdout.read(100).decode("ascii")
 			if len(buf) > 0:
 				out += buf
 				lastRead = time.time()
-				print "out:", out
+				print("out:", out)
 			else:
 				break
 		if p.stderr in q[0]:
-			buf = p.stderr.read(100)
+			buf = p.stderr.read(100).decode("ascii")
 			if len(buf) > 0:
 				err += buf
 				lastRead = time.time()
-				print "err:", err
+				print("err:", err)
 			else:
 				break
 
 	p.poll()
 	if p.returncode == None:
-		print "kill"
+		print("kill")
 		res = "timeout!"		
 		if len(err) > 0:
 			res += "(err: {0})".format(err)

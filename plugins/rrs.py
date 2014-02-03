@@ -1,6 +1,6 @@
 # coding=utf-8
 from ext import *
-import datetime, re, time, select, random, os, json, time, urllib2
+import datetime, re, time, select, random, os, json, time, urllib.request, urllib.error, urllib.parse
 from subprocess import *
 import utils
 	

@@ -1,6 +1,6 @@
 # coding=utf-8
 from ext import *
-import datetime, re, time, select, random, os, json, time, urllib2
+import datetime, re, time, select, random, os, json, time, urllib.request, urllib.error, urllib.parse
 from subprocess import *
 import utils
 
@@ -61,7 +61,7 @@ def c(ircbot, args):
 	ircbot.reply(str(datetime.datetime.now()))
 	
 @command("rand", 0)
-@desc(u"Zwraca losową liczbę z zakresu 1-6")
+@desc("Zwraca losową liczbę z zakresu 1-6")
 def c(ircbot, args):
 	if ircbot.mute: return
 	ircbot.reply("4")
@@ -131,7 +131,7 @@ def c(ircbot, args):
 def c(ircbot, args):
 	s = ""
 	ob = 0
-	for i in xrange(50):
+	for i in range(50):
 		c = random.choice("()")
 		s += c
 		if c == "(":

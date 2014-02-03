@@ -25,7 +25,7 @@ def c(ircbot, args):
 				return
 		
 		if user.nick == ircbot.getNick():
-			ircbot.reply(u"a takiego wała!")
+			ircbot.reply("a takiego wała!")
 			return
 		
 		ircbot.reply("OK! let's try - everyone says y/n")
@@ -44,7 +44,7 @@ def c(ircbot, args):
 			"votesY": 1,
 			"votesN": 0,
 		}
-		print voteKick
+		print(voteKick)
 		#MODE #stosowana +b *!*@*
 
 @handler("message_public")
@@ -72,4 +72,4 @@ def c(ircbot, sender, message):
 			ircbot.Kick(irc_channel, voteKick["target"], "sorry, that's democracy!")
 			voteKick = None
 		
-		print voteKick
+		print(voteKick)

@@ -110,12 +110,12 @@ class IRCClient(object):
 						currentUsers.append(user.nick)
 
 					print("bef: " + str(len(self.nickList)))
-					self.nickList = filter(lambda x: x.nick in currentUsers, self.nickList)
+					self.nickList = [x for x in self.nickList if x.nick in currentUsers]
 					print("aft: " + str(len(self.nickList)))
 			
 			elif code == 433:
 				if "Nickname is already in use." in msg:
-					print "Nick in use"
+					print("Nick in use")
 		
 		# Wiadomosci do bota
 		res = re.match("^:([^!]+)!([^ ]+) (.+)$", msg)
@@ -172,7 +172,7 @@ class IRCClient(object):
 						newNick = res3.group(1)
 						if senderNick == self.nick:
 							self.nick = newNick
-							print "CHANGED"
+							print("CHANGED")
 							
 				# MODE
 				elif cmd == "MODE":
@@ -188,7 +188,7 @@ class IRCClient(object):
 						message = res3.group(2)
 						res4 = re.match("\x01ACTION (.*)\x01", message)
 						if res4 is not None:
-							print "Me: " + res4.group(1)
+							print("Me: " + res4.group(1))
 						else:
 							self.lastTarget = "#"+channel
 							self.onPublicMessage(channel, senderNick, message)
@@ -251,11 +251,11 @@ class IRCClient(object):
 				self.joinState = 0
 				self.connectionState = 0
 				return
-			self.data += newData
+			self.data += newData.decode("utf-8", "ignore")
 		
 		idx = self.data.find("\n")
 		if idx != -1:
-			self.processMessage(self.data[:idx - 1].decode("utf-8", "ignore"))
+			self.processMessage(self.data[:idx - 1])
 			self.data = self.data[idx + 1:]
 
 	
@@ -264,7 +264,7 @@ class IRCClient(object):
 		if len(msg) == 0: return
 		if not self.onBeforeSendServerMessage(msg):
 			return
-		self.sock.send(msg.encode("utf-8") + "\r\n")
+		self.sock.send((msg + "\r\n").encode("utf-8"))
 		self.onSendServerMessage(msg) 
 	def requestNickList(self):
 		self.sendServerMessage("NAMES #{}".format(self.channel))
@@ -300,12 +300,12 @@ class IRCClient(object):
 	def sendChannelMessage(self, channel, msg):
 		if len(msg) == 0: return
 		if isinstance(msg, str):
-			msg = unicode(msg)
+			msg = str(msg)
 		self.sendServerMessage("PRIVMSG #"+self.channel+" :"+msg)
 		self.onPublicMessage(self.channel, self.nick, msg)
 	def reply(self, msg):
 		if isinstance(msg, str):
-			msg = unicode(msg)
+			msg = str(msg)
 		self.sendServerMessage("PRIVMSG "+self.lastTarget+" :"+msg)
 		if self.lastTarget[0] == "#":
 			self.onPublicMessage(self.channel[1:], self.nick, msg)

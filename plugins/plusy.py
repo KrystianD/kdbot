@@ -8,7 +8,7 @@ filePath = "a.txt"
 def c(ircbot, match):
 	nick = match.group(1)	
 	user = ircbot.getUserByNick(nick)
-	print nick, user.nick, user.onChannel
+	print(nick, user.nick, user.onChannel)
 	if not user.onChannel:
 		return
 
@@ -35,7 +35,7 @@ def c(ircbot, args):
 	nick = args[0]
 	userObj = ircbot.getUserByNick(nick)
 	if userObj:
-		data = pm.getData("plusy", [])
+		data = pm.getData("warny", [])
 		done = False
 		for rec in data:
 			if rec[0] == nick:
@@ -44,7 +44,7 @@ def c(ircbot, args):
 				break
 		if not done:
 			data.append([nick,0,1])
-		pm.saveData("plusy", data)
+		pm.saveData("warny", data)
 		ircbot.reply("i see you, "+nick+"..")
 
 @command("plusy", 0)
@@ -55,7 +55,7 @@ def c(ircbot, args):
 		if rec[1] != 0:
 			nick = rec[0]
 			mid = int(len(nick) / 2)
-			nick = nick[0:mid] + u"\u200b" + nick[mid:]
+			nick = nick[0:mid] + "\u200b" + nick[mid:]
 			lines.append(nick+" = "+str(rec[1]))
 	ircbot.reply(", ".join(lines))
 
@@ -67,6 +67,6 @@ def c(ircbot, args):
 		if rec[2] != 0:
 			nick = rec[0]
 			mid = int(len(nick) / 2)
-			nick = nick[0:mid] + u"\u200b" + nick[mid:]
+			nick = nick[0:mid] + "\u200b" + nick[mid:]
 			lines.append(nick+" = "+str(rec[2]))
 	ircbot.reply(", ".join(lines))

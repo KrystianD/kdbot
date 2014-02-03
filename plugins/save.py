@@ -10,7 +10,7 @@ dataDir = "/home/krystiand/domains/hskrk/saves"
 def appendLine(msg):
 	global lastLines
 	global lastLinesNT
-	lastLines.append(u"[{0}] {1}".format(datetime.datetime.now().strftime("%H:%M:%S"), msg))
+	lastLines.append("[{0}] {1}".format(datetime.datetime.now().strftime("%H:%M:%S"), msg))
 	lastLinesNT.append(msg)
 	while len(lastLines) > 20: del lastLines[0]
 	while len(lastLinesNT) > 20: del lastLinesNT[0]
@@ -32,7 +32,7 @@ def c(ircbot, args):
 	file.write("\n".join(lastLines).encode("utf-8"))
 	file.close()	
 	
-	print filePath
+	print(filePath)
 	ircbot.reply("saved!")
 
 @command("log", 0)

@@ -24,7 +24,7 @@ def c(ircbot, args):
 	if args[0] in sets and sets[args[0]]["value"][0] == "@":
 		ircbot.reply("locked!")
 		return
-	sets[args[0]] = { "value": args[1].lstrip("@"), "user": ircbot.getLastSender(), "time": time.time() }
+	sets[args[0]] = { "value": args[1].lstrip("@"), "user": ircbot.getLastSender().nick, "time": time.time() }
 	pm.saveData("sets", sets)
 
 @command("unset", 1)
@@ -59,16 +59,16 @@ def c(ircbot, args):
 	
 	lastRandSetCount += 1
 	if lastRandSetCount > 3:
-		ircbot.reply(u"Only 3 randsets per minute! ;p")
+		ircbot.reply("Only 3 randsets per minute! ;p")
 		return
 	
 	sets = pm.getData("sets", {})
-	key = random.choice(sets.keys())
+	key = random.choice(list(sets.keys()))
 	entry = sets[key]
 	val = entry["value"]
 	if val[0] == "@":
 		val = val[1:]
-	ircbot.reply(u"{key} - {val}".format(key=key, val=val))
+	ircbot.reply("{key} - {val}".format(key=key, val=val))
 
 @command("infoset", 1)
 def c(ircbot, args):
@@ -79,11 +79,11 @@ def c(ircbot, args):
 		val = entry["value"]
 		if val[0] == "@":
 			val = val[1:]
-		infoStr = u""
+		infoStr = ""
 		if "user" in entry:
 			infoStr += entry["user"]
 		if "time" in entry:
-			infoStr += u" at " + datetime.datetime.fromtimestamp(entry["time"]).strftime("%Y-%m-%d %H:%M:%S")
+			infoStr += " at " + datetime.datetime.fromtimestamp(entry["time"]).strftime("%Y-%m-%d %H:%M:%S")
 		if len(infoStr) == 0:
 			infoStr = "no info :("
 		ircbot.reply(infoStr)
@@ -111,6 +111,6 @@ def c123(ircbot, sender, prompt, text):
 			r = r.replace("***", args)
 		
 		if text == "KD2":
-			ircbot.kick("stosowana", sender, u"ha! tego się nie spodziewałeś!")
+			ircbot.kick("stosowana", sender, "ha! tego się nie spodziewałeś!")
 
 		ircbot.reply(r)

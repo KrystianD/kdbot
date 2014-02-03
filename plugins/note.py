@@ -15,9 +15,9 @@ def c(ircbot, args):
 	message2 = message
 	if len(message2) > 5:
 		message2 = message2[:5] + "..."
-	ircbot.reply(u"Note for {0}: {1} saved!".format(target, message2))
+	ircbot.reply("Note for {0}: {1} saved!".format(target, message2))
 	
-	print sender, target, message
+	print(sender, target, message)
 	
 @handler("message_public")
 def c(ircbot, sender, message):
@@ -28,7 +28,7 @@ def c(ircbot, sender, message):
 	for rec in data:
 		recNick = rec[1].lower()
 		if recNick.startswith(sender) or sender.startswith(recNick):
-			ircbot.reply(u"{0}->{1}: {2} (at {3})".format(rec[0], rec[1], rec[2], rec[3]))
+			ircbot.reply("{0}->{1}: {2} (at {3})".format(rec[0], rec[1], rec[2], rec[3]))
 		else:
 			newData.append(rec)
 	if len(data) != len(newData):
@@ -43,7 +43,7 @@ def c(ircbot, who):
 	for rec in data:
 		recNick = rec[1].lower()
 		if recNick.startswith(sender) or sender.startswith(recNick):
-			ircbot.reply(u"{0}->{1}: {2} (at {3})".format(rec[0], rec[1], rec[2], rec[3]))
+			ircbot.reply("{0}->{1}: {2} (at {3})".format(rec[0], rec[1], rec[2], rec[3]))
 		else:
 			newData.append(rec)
 	if len(data) != len(newData):

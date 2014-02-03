@@ -15,12 +15,12 @@ class PluginManager:
 				f = open(filepath, "rb")
 				name = os.path.splitext(filepath)
 				name = os.path.basename(name[0])
-				print name, filepath
+				print(name, filepath)
 				m = imp.load_module(name, f, filepath,('.py', 'U', 1))
 				f.close()
 			except Exception as inst:
 				log.LogWarn("Unable to load {0} error: {1}".format(filepath, inst))
-		print "Reloaded"
+		print("Reloaded")
 
 	def getData(self, name, default=None):
 		path = "plugins_data/" + name + ".txt"
@@ -29,7 +29,9 @@ class PluginManager:
 			return self.data[name]
 		elif os.path.exists(path):			
 			file = open(path, "r")
-			data = json.load(file)
+			s = file.read()
+			print(s)
+			data = json.loads(s)
 			file.close()
 			self.data[name] = data
 		else:
@@ -43,7 +45,7 @@ class PluginManager:
 		self.data[name] = data
 		
 		file = open(path, "wb")
-		json.dump(data, file)
+		file.write(json.dumps(data).encode("ascii"))
 		file.close()
 		
 	def getUsage(self, plugin):
@@ -54,7 +56,7 @@ class PluginManager:
 		if plugin["argsCnt"] == -1:
 			res += " arg0 arg1 arg2..."
 		elif plugin["argsCnt"] > 0:
-			for i in xrange(0, plugin["argsCnt"]):
+			for i in range(0, plugin["argsCnt"]):
 				res += " arg" + str(i)
 	
 		return "usage: " + res

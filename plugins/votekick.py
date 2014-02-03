@@ -12,9 +12,9 @@ def c (ircbot, args):
 	if voteKick != None and time.time () - voteKick["time"] >= 60:
 		voteKick = None
 		
-	sender = ircbot.GetLastSender ()
+	sender = ircbot.getLastSender ()
 			
-	userObj = ircbot.GetUserByNick (args[0])
+	userObj = ircbot.getUserByNick (args[0])
 	if userObj:
 		if voteKick != None:
 			if voteKick["target"] != sender:
@@ -30,7 +30,7 @@ def c (ircbot, args):
 		
 		ircbot.Reply ("OK! let's try - everyone says y/n")
 		
-		nicks = ircbot.GetNickList ()
+		nicks = ircbot.getNickList ()
 		nicks2 = []
 		for nick in nicks: nicks2.append (nick.nick)
 		nicks2.remove (userObj.nick)
@@ -55,7 +55,7 @@ def c (ircbot, sender, message):
 	if voteKick != None and time.time () - voteKick["time"] >= 60:
 		voteKick = None
 	
-	sender = ircbot.GetLastSender ()
+	sender = ircbot.getLastSender ()
 	if voteKick != None:
 		if message == "y" or message == "n":			
 			if sender in voteKick["allowed"]:

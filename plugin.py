@@ -20,7 +20,6 @@ class PluginManager:
 				f.close ()
 			except Exception as inst:
 				log.LogWarn ("Unable to load {0} error: {1}".format (filepath, inst))
-		print self.commands
 		print "Reloaded"
 
 	def GetData (self, name, default=None):

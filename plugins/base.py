@@ -4,80 +4,79 @@ import datetime, re, time, select, random, os, json, time, urllib2
 from subprocess import *
 import utils
 
-@command ("help", -1)
-def c (ircbot, args):
-
+@command("help", -1)
+def c(ircbot, args):
 	if args:
 		for plugin in pm.commands:
 			if plugin["type"] == 0 and plugin["name"] == args[0]:
 				if "desc" in plugin:
-					ircbot.Reply ("*" + plugin["name"] + "*: " + plugin["desc"])
+					ircbot.reply("*" + plugin["name"] + "*: " + plugin["desc"])
 				else:
-					ircbot.Reply ("*" + plugin["name"] + "*: no description")
+					ircbot.reply("*" + plugin["name"] + "*: no description")
 				return
 	
 	str = []	
 	for plugin in pm.commands:
 		if plugin["type"] == 0:
-			str.append (plugin["prompt"] + plugin["name"])
-	str = ", ".join (str)
+			str.append(plugin["prompt"] + plugin["name"])
+	str = ", ".join(str)
 
-	ircbot.Reply (str)
+	ircbot.reply(str)
 
-@command ("mute", 1)
-def c (ircbot, args):
-	if not ircbot.GetLastSenderObj () or not ircbot.GetLastSenderObj ().op:
+@command("mute", 1)
+def c(ircbot, args):
+	if not ircbot.getLastSenderObj() or not ircbot.getLastSenderObj().op:
 		return
 	
 	if args[0] == "1":
 		ircbot.mute = True
-		ircbot.Reply ("muted")
+		ircbot.reply("muted")
 	elif args[0] == "0":
 		ircbot.mute = False
-		ircbot.Reply ("unmuted")
+		ircbot.reply("unmuted")
 		
-@command ("g", 1)
-@desc ("gugiel")
-@usage ("!g fraza")
-def c (ircbot, args):
+@command("g", 1)
+@desc("gugiel")
+@usage("!g fraza")
+def c(ircbot, args):
 	if ircbot.mute: return
-	ircbot.Reply ("http://google.pl/search?q="+args[0].replace (" ", "+"))
+	ircbot.reply("http://google.pl/search?q="+args[0].replace(" ", "+"))
 
-@command ("args", 2)
-@usage ("!args num arg0 arg1...")
-def c (ircbot, args):
+@command("args", 2)
+@usage("!args num arg0 arg1...")
+def c(ircbot, args):
 	if ircbot.mute: return
-	ircbot.Reply (str(utils.ParseArgs (args[1], int(args[0]))))
+	ircbot.reply(str(utils.ParseArgs(args[1], int(args[0]))))
 	
-@command ("paste", 0)
-@desc ("2 pasty")
-def c (ircbot, args):
+@command("paste", 0)
+@desc("2 pasty")
+def c(ircbot, args):
 	if ircbot.mute: return
-	ircbot.Reply ("http://pastebin.com http://pastebin.pl")
+	ircbot.reply("http://pastebin.com http://pastebin.pl")
 	
-@command ("data", 0)
-@desc ("data?")
-def c (ircbot, args):
+@command("data", 0)
+@desc("data?")
+def c(ircbot, args):
 	if ircbot.mute: return
-	ircbot.Reply (str(datetime.datetime.now ()))
+	ircbot.reply(str(datetime.datetime.now()))
 	
-@command ("rand", 0)
-@desc (u"Zwraca losową liczbę z zakresu 1-6")
-def c (ircbot, args):
+@command("rand", 0)
+@desc(u"Zwraca losową liczbę z zakresu 1-6")
+def c(ircbot, args):
 	if ircbot.mute: return
-	ircbot.Reply ("4")
+	ircbot.reply("4")
 
 lastNick = None
 lastNick2 = None
 lastDMessage = ""
 
-@command ("makefun", 0)
-def c (ircbot, args):
+@command("makefun", 0)
+def c(ircbot, args):
 	global lastDMessage
 	lastDMessage = ""
 	
-@handler ("message_public")
-def c (ircbot, sender, message):
+@handler("message_public")
+def c(ircbot, sender, message):
 	global lastNick, lastNick2, lastDMessage
 	lastNick2 = lastNick
 	lastNick = sender
@@ -92,49 +91,49 @@ def c (ircbot, sender, message):
 		
 	if not nofun:
 		if len(message) != len(lastDMessage) + 1:
-			ircbot.Reply ("fail")
+			ircbot.reply("fail")
 		else:
 			lastDMessage = message
 
-@command ("reverse", 1)
-def c (ircbot, args):
-	ircbot.Reply (args[0][::-1])
+@command("reverse", 1)
+def c(ircbot, args):
+	ircbot.reply(args[0][::-1])
 	
-@command ("slap", 0)
-def c (ircbot, args):
+@command("slap", 0)
+def c(ircbot, args):
 	if ircbot.mute: return
 	global lastNick2
 	if lastNick2 != None:
 		msg = "slaps " + lastNick2
-		ircbot.SendChannelMessage ("#hackerspace-krk", "\x01ACTION {0}\x01".format (msg))
+		ircbot.sendChannelMessage("#hackerspace-krk", "\x01ACTION {0}\x01".format(msg))
 
-@command ("board", 0)
-def c (ircbot, args):
+@command("board", 0)
+def c(ircbot, args):
 	if ircbot.mute: return
-	ircbot.Reply ("http://cosketch.com")
+	ircbot.reply("http://cosketch.com")
 
 last = -1
-@command ("last", 0)
-@desc ("Time elapsed since previous call")
-def c (ircbot, args):
+@command("last", 0)
+@desc("Time elapsed since previous call")
+def c(ircbot, args):
 	global last
 	if ircbot.mute: return
 	if last != -1:
-		ircbot.Reply (str(time.time () - last))
-	last = time.time ()
+		ircbot.reply(str(time.time() - last))
+	last = time.time()
 
-@command ("say", 1)
-def c (ircbot, args):
+@command("say", 1)
+def c(ircbot, args):
 	if ircbot.mute: return
-	if ircbot.GetLastSender ():
-		ircbot.Reply (ircbot.GetLastSender () + " forced me to say: " + args[0])
+	if ircbot.getLastSender():
+		ircbot.reply(ircbot.getLastSender() + " forced me to say: " + args[0])
 
-@command ("lisp", 0)
-def c (ircbot, args):
+@command("lisp", 0)
+def c(ircbot, args):
 	s = ""
 	ob = 0
-	for i in xrange (50):
-		c = random.choice ("()")
+	for i in xrange(50):
+		c = random.choice("()")
 		s += c
 		if c == "(":
 			ob = ob + 1
@@ -144,4 +143,4 @@ def c (ircbot, args):
 				s = "(" + s
 				ob = ob + 1
 	s = s + ")" * ob
-	ircbot.Reply (s)
+	ircbot.reply(s)

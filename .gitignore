@@ -6,3 +6,4 @@ plugins_data/
 log/
 *.pye
 *.bak
+saves/

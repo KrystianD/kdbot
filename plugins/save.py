@@ -1,11 +1,11 @@
 # coding=utf-8
 from ext import *
-import os, datetime
+import os, datetime, sys
+# sys.path.
+import config
 
 lastLines = []
 lastLinesNT = []
-
-dataDir = "/home/krystiand/domains/hskrk/saves"
 
 def appendLine(msg):
 	global lastLines
@@ -22,13 +22,13 @@ def c(ircbot, args):
 	sender = ircbot.getLastSender().nick
 	i = 0
 	while True:
-		filePath = os.path.join(dataDir, "{0:04}.txt".format(i))
+		filePath = os.path.join(config.saves_dir, "{0:04}.txt".format(i))
 		i = i + 1
 		if not os.path.exists(filePath):
 			break
 	file = open(filePath, "wb")
-	file.write(sender + "\n")
-	file.write(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "\n")
+	file.write((sender + "\n").encode("utf-8"))
+	file.write((datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "\n").encode("utf-8"))
 	file.write("\n".join(lastLines).encode("utf-8"))
 	file.close()	
 	

@@ -317,6 +317,11 @@ class IRCClient(object):
 		else:
 			self.sendServerMessage("KICK #"+channel+" "+nick)
 	def setBan(self, channel, mask):
-			self.sendServerMessage("MODE #"+channel+" +b "+pattern)
+		self.sendServerMessage("MODE #"+channel+" +b "+pattern)
 	def unsetBan(self, channel, mask):
-			self.sendServerMessage("MODE #"+channel+" -b "+pattern)
+		self.sendServerMessage("MODE #"+channel+" -b "+pattern)
+	def part(self, channel):
+		self.sendServerMessage("PART #"+channel)
+	def join(self, channel):
+		self.sendServerMessage("JOIN #"+channel)
+		self.joinState = 1

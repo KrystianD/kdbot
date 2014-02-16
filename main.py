@@ -54,10 +54,9 @@ class IRCBot(IRCClient.IRCClient):
 			info = "(quit: {why})".format(why=why)
 		self.appendToIRCLog("--- {sender} left the room".format(sender=who, info=info))
 	def onUserKicked(self, whoKicked, who, why):
-		#self.onChannel = False
 		info = ""
 		if len(why) > 0:
-			info = "({why})".format(why=why)
+			info = " ({why})".format(why=why)
 		self.appendToIRCLog("--- {who} left the room (Kicked by {whoKicked}{info})".format(who=who, whoKicked=whoKicked, info=info))
 		
 	def onServerMessage(self, message):

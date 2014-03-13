@@ -2,7 +2,7 @@
 from ext import *
 import datetime, re, time, select, random, os, json, time, urllib.request, urllib.error, urllib.parse
 from subprocess import *
-import utils
+import utils, config
 	
 @command("rrs", 0)
 def c(ircbot, args):
@@ -14,7 +14,7 @@ def c(ircbot, args):
 	
 	rr2 = random.randint(2, 10)
 	rr1 = random.randint(1, rr2 - 1)
-	ircbot.reply("done!({0} .. {1})".format(rr1, rr2))
+	ircbot.reply("done! ({0} .. {1})".format(rr1, rr2))
 	
 	#return
 	
@@ -40,10 +40,12 @@ def c(ircbot, args):
 		ircbot.reply("empty!")
 		return
 	
+	s = ircbot.getLastSender()
 	if rr1 == rr2 or random.randint(1, rr2) <= rr1:
 		rr1 = rr1 - 1
 		rr2 = rr2 - 1
 		ircbot.reply("chlip " + random.choice([":D", ":/", "/:|", ";p", "<3", "3<"]))
+		ircbot.kick(config.irc_channel, s.nick, "by rr")
 	else:
 		rr2 = rr2 - 1
-	ircbot.reply("...({0} .. {1})".format(rr1, rr2))
+	ircbot.reply("... ({0} .. {1})".format(rr1, rr2))

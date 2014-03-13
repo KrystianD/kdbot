@@ -12,6 +12,8 @@ def c(ircbot, match):
 	if not user.onChannel:
 		return
 
+	nick = utils.nickBasename(nick)
+
 	if ircbot.getLastSender().nick != nick:
 		data = pm.getData("plusy", [])
 		done = False
@@ -34,7 +36,8 @@ def c(ircbot, match):
 def c(ircbot, args):
 	nick = args[0]
 	userObj = ircbot.getUserByNick(nick)
-	if userObj:
+	nick = utils.nickBasename(nick)
+	if userObj.onChannel:
 		data = pm.getData("warny", [])
 		done = False
 		for rec in data:

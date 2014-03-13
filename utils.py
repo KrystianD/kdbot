@@ -1,4 +1,4 @@
-import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse
+import urllib.request, urllib.parse, urllib.error, urllib.request, urllib.error, urllib.parse, re
 
 def ParseArgs (str, num):
 	str = str.strip ()
@@ -68,3 +68,11 @@ def GetShortLink (url):
 def noHL(text):
 	mid = int(len(text) / 2)
 	return text[0:mid] + "\u200b" + text[mid:]
+
+def nickBasename(nick):
+	print (nick)
+	parts = re.split("\|", nick)
+	nick = parts[0]
+	nick = re.sub("\d+$", "", nick)
+	print (nick)
+	return nick

@@ -211,7 +211,7 @@ class CLI(threading.Thread):
 
 random.seed()
 
-client = IRCBot("sendak.freenode.net", 6667, irc_nick, irc_channel)
+client = IRCBot("irc.freenode.net", 6667, irc_nick, irc_channel)
 ext.pm = client.pluginManager
 client.reloadPlugins()
 

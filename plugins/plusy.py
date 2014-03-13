@@ -1,6 +1,6 @@
 # coding=utf-8
 from ext import *
-import os
+import os, utils
 
 filePath = "a.txt"
 
@@ -12,7 +12,7 @@ def c(ircbot, match):
 	if not user.onChannel:
 		return
 
-	if ircbot.getLastSender() != nick:
+	if ircbot.getLastSender().nick != nick:
 		data = pm.getData("plusy", [])
 		done = False
 		for rec in data:
@@ -54,9 +54,7 @@ def c(ircbot, args):
 	for rec in sorted(data, key=lambda val: val[1], reverse=True):
 		if rec[1] != 0:
 			nick = rec[0]
-			mid = int(len(nick) / 2)
-			nick = nick[0:mid] + "\u200b" + nick[mid:]
-			lines.append(nick+" = "+str(rec[1]))
+			lines.append(utils.noHL(nick)+" = "+str(rec[1]))
 	ircbot.reply(", ".join(lines))
 
 @command("warny", 0)
@@ -66,7 +64,5 @@ def c(ircbot, args):
 	for rec in sorted(data, key=lambda val: val[2], reverse=True):
 		if rec[2] != 0:
 			nick = rec[0]
-			mid = int(len(nick) / 2)
-			nick = nick[0:mid] + "\u200b" + nick[mid:]
-			lines.append(nick+" = "+str(rec[2]))
+			lines.append(utils.noHL(nick)+" = "+str(rec[2]))
 	ircbot.reply(", ".join(lines))

@@ -64,3 +64,7 @@ def GetShortLink (url):
 		return urllib.request.urlopen ("http://tinyurl.com/api-create.php?url=" + urllib.parse.quote_plus (url)).read ()
 	except:
 		return url
+
+def noHL(text):
+	mid = int(len(text) / 2)
+	return text[0:mid] + "\u200b" + text[mid:]

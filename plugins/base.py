@@ -110,7 +110,7 @@ def c(ircbot, args):
 @command("board", 0)
 def c(ircbot, args):
 	if ircbot.mute: return
-	ircbot.reply("http://cosketch.com")
+	ircbot.reply("http://www.twiddla.com")
 
 last = -1
 @command("last", 0)

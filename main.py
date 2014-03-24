@@ -87,14 +87,14 @@ class IRCBot(IRCClient.IRCClient):
 			argsStr = None
 			prompt = ""
 			
-			res = re.match("^([!\.])([a-zA-Z0-9]+)$", message)
+			res = re.match("^([!\.]|kd)([a-zA-Z0-9]+)$", message)
 			if res:
 				prompt = res.group(1)
 				cmd = res.group(2)
 				argsStr = ""
 			else:
 				
-				res = re.match("^([!\.])([a-zA-Z0-9]+) (.*)$", message)
+				res = re.match("^([!\.]|kd)([a-zA-Z0-9]+) (.*)$", message)
 				if res:
 					prompt = res.group(1)
 					cmd = res.group(2)
@@ -102,7 +102,7 @@ class IRCBot(IRCClient.IRCClient):
 					
 			if cmd:
 				for plugin in self.pluginManager.commands:
-					if plugin["type"] == 0 and plugin["prompt"] == prompt and plugin["name"] == cmd:
+					if plugin["type"] == 0 and (plugin["prompt"] == prompt or prompt == "kd") and plugin["name"] == cmd:
 						managed = True
 						args = utils.ParseArgs(argsStr, plugin["argsCnt"])
 						if plugin["argsCnt"] <= 0 or args:
@@ -117,7 +117,7 @@ class IRCBot(IRCClient.IRCClient):
 			if cmd is not None:
 				self.handleSignal("unknown_command", sender, prompt, cmd, argsStr)
 			else:
-				res = re.match("^([!\.])(.+)$", message)
+				res = re.match("^([!\.]|kd)(.+)$", message)
 				if res:
 					prompt = res.group(1)
 					text = res.group(2)
@@ -211,7 +211,7 @@ class CLI(threading.Thread):
 
 random.seed()
 
-client = IRCBot("irc.freenode.net", 6667, irc_nick, irc_channel)
+client = IRCBot("sendak.freenode.net", 6667, irc_nick, irc_channel)
 ext.pm = client.pluginManager
 client.reloadPlugins()
 

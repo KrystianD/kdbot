@@ -95,7 +95,7 @@ def c(ircbot, sender, prompt, cmd, argsStr):
 @handler("unknown_message")
 def c123(ircbot, sender, prompt, text):
 	if ircbot.mute: return
-	if prompt != "!": return
+	if prompt != "!" and prompt != "kd": return
 	sets = pm.getData("sets", {})
 	parts = text.split(' ', 1)
 	text = parts[0]

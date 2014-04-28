@@ -17,7 +17,7 @@ def c(ircbot, args):
 	lastRead = time.time()
 	while time.time() - lastRead < 0.5 and time.time() - startTime < 5:
 		p.poll()
-		# print "ret:", p.returncode
+		print ("ret:", p.returncode)
 		
 		q = select.select([p.stdout, p.stderr], [], [], 0.2)
 		if p.stdout in q[0]:
@@ -27,6 +27,7 @@ def c(ircbot, args):
 				lastRead = time.time()
 				print("out:", out)
 			else:
+				print("out stop")
 				break
 		if p.stderr in q[0]:
 			buf = p.stderr.read(100).decode("ascii")
@@ -35,18 +36,20 @@ def c(ircbot, args):
 				lastRead = time.time()
 				print("err:", err)
 			else:
+				print("err stop")
 				break
 
 	p.poll()
-	if p.returncode == None:
+	print("Ret: ", p.returncode)
+	if p.returncode == None and len(out) == 0:
 		print("kill")
 		res = "timeout!"		
 		if len(err) > 0:
-			res += "(err: {0})".format(err)
+			res += " (err: {0})".format(err)
 		p.kill()
 	else:
 		res = out
 		if len(err) > 0:
-			res = "!!!(err: {0})".format(err)
+			res = "!!! (err: {0})".format(err)
 	
-	ircbot.reply(res)
+	ircbot.reply(res.strip())

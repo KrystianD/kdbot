@@ -1,6 +1,6 @@
 # coding=utf-8
 from ext import *
-import datetime, re, time, select, random, os, json, time
+import datetime, re, time, select, random, os, json, time, math
 from subprocess import *
 import utils
 
@@ -9,10 +9,10 @@ voteKick = None
 @command("votekick", 1)
 def c(ircbot, args):
 	global voteKick
-	if voteKick != None and time.time() - voteKick["time"] >= 60:
+	if voteKick != None and time.time() - voteKick["time"] >= 7 * 60:
 		voteKick = None
 		
-	sender = ircbot.getLastSender()
+	sender = ircbot.getLastSender().nick
 			
 	user = ircbot.getUserByNick(args[0])
 	if user:
@@ -50,7 +50,7 @@ def c(ircbot, args):
 @handler("message_public")
 def c(ircbot, sender, message):
 	global voteKick
-	if voteKick != None and time.time() - voteKick["time"] >= 60:
+	if voteKick != None and time.time() - voteKick["time"] >= 7 * 60:
 		voteKick = None
 	
 	sender = ircbot.getLastSender().nick
@@ -60,7 +60,9 @@ def c(ircbot, sender, message):
 				if message == "y":
 					voteKick["votesY"] += 1
 					voteKick["allowed"].remove(sender)
-					ircbot.reply("got it! ~~ {0}/{1}".format(voteKick["votesY"], voteKick["votesTotal"]))
+					left = math.ceil(voteKick["votesTotal"] / 5 - voteKick["votesY"])
+					timeLeft = int(7 * 60 - (time.time() - voteKick["time"]))
+					ircbot.reply("got it! ~~ {0}/{1} {2} secs and {3} votes to go!".format(voteKick["votesY"], voteKick["votesTotal"], timeLeft, left))
 				elif message == "n":
 					voteKick["votesN"] += 1
 					voteKick["allowed"].remove(sender)
@@ -68,7 +70,7 @@ def c(ircbot, sender, message):
 			else:
 				ircbot.reply(sender + ": ...")
 		
-		if voteKick["votesY"] > voteKick["votesTotal"] / 2:
+		if voteKick["votesY"] > voteKick["votesTotal"] / 5:
 			ircbot.Kick(irc_channel, voteKick["target"], "sorry, that's democracy!")
 			voteKick = None
 		

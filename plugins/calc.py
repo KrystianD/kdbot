@@ -15,7 +15,7 @@ def c(ircbot, args):
 
 	startTime = time.time()
 	lastRead = time.time()
-	while time.time() - lastRead < 0.5 and time.time() - startTime < 5:
+	while time.time() - lastRead < 0.5 and time.time() - startTime < 1:
 		p.poll()
 		print ("ret:", p.returncode)
 		
@@ -52,4 +52,6 @@ def c(ircbot, args):
 		if len(err) > 0:
 			res = "!!! (err: {0})".format(err)
 	
-	ircbot.reply(res.strip())
+	if len(res) > 100:
+		res = res[100:]
+	ircbot.reply("> " + res.strip())

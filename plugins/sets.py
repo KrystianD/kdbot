@@ -95,7 +95,7 @@ def c(ircbot, sender, prompt, cmd, argsStr):
 @handler("unknown_message")
 def c123(ircbot, sender, prompt, text):
 	if ircbot.mute: return
-	if prompt != "!" and prompt != "kd": return
+	if prompt != "!": return
 	sets = pm.getData("sets", {})
 	parts = text.split(' ', 1)
 	text = parts[0]
@@ -109,8 +109,5 @@ def c123(ircbot, sender, prompt, text):
 		args = argsStr.strip()
 		if len(args) > 0:
 			r = r.replace("***", args)
-		
-		if text == "KD2":
-			ircbot.kick("stosowana", sender, "ha! tego się nie spodziewałeś!")
 
 		ircbot.reply(r)

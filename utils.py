@@ -39,20 +39,20 @@ def ParseArgs (str, num):
 		if num != -1 and len (newParts) == num - 1:
 			break
 	
-	print("1 pass")
-	print(newParts)
+	# print("1 pass")
+	# print(newParts)
 	
 	for j in range (0, len (newParts)):
 		newParts[j] = newParts[j].replace ('\x000', '"')
 	
-	print(i)
+	# print(i)
 	if i + 1 < len(parts):
 		tmp = " ".join (parts[i + 1:])
 		tmp = tmp.replace ('\x000', '\\"')
 		newParts.append (tmp)
 		
-	print("2 pass")
-	print(newParts)
+	# print("2 pass")
+	# print(newParts)
 	
 	if len (newParts) < num:
 		return None
@@ -70,9 +70,9 @@ def noHL(text):
 	return text[0:mid] + "\u200b" + text[mid:]
 
 def nickBasename(nick):
-	print (nick)
+	# print (nick)
 	parts = re.split("\|", nick)
 	nick = parts[0]
 	nick = re.sub("\d+$", "", nick)
-	print (nick)
+	# print (nick)
 	return nick

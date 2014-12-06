@@ -4,7 +4,7 @@ import datetime, re, time, select, random, os, json, time, urllib.request, urlli
 from subprocess import *
 import utils
 
-@command("c", 1)
+# @command("c", 1)
 def c(ircbot, args):
 	if ircbot.mute: return
 	p = Popen(["/usr/bin/bc", "-l"], stdout=PIPE, stdin=PIPE, stderr=PIPE, bufsize=0)

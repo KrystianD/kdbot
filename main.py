@@ -69,9 +69,10 @@ class IRCBot(IRCClient.IRCClient):
 	def onPublicMessage(self, channel, sender, message):
 		self.appendToIRCLog("<{0}> {1}".format(sender, message))
 		
-		self.handleSignal("message_public", sender, message)
-		
 		if sender == self.getNick(): return
+		if ignored_nicks is not None and sender in ignored_nicks: return
+
+		self.handleSignal("message_public", sender, message)
 		
 		managed = False
 		for plugin in self.pluginManager.commands:
@@ -87,14 +88,14 @@ class IRCBot(IRCClient.IRCClient):
 			argsStr = None
 			prompt = ""
 			
-			res = re.match("^([!\.]|kd)([a-zA-Z0-9]+)$", message)
+			res = re.match("^([!\.])([a-zA-Z0-9]+)$", message)
 			if res:
 				prompt = res.group(1)
 				cmd = res.group(2)
 				argsStr = ""
 			else:
 				
-				res = re.match("^([!\.]|kd)([a-zA-Z0-9]+) (.*)$", message)
+				res = re.match("^([!\.])([a-zA-Z0-9]+) (.*)$", message)
 				if res:
 					prompt = res.group(1)
 					cmd = res.group(2)
@@ -102,7 +103,7 @@ class IRCBot(IRCClient.IRCClient):
 					
 			if cmd:
 				for plugin in self.pluginManager.commands:
-					if plugin["type"] == 0 and (plugin["prompt"] == prompt or prompt == "kd") and plugin["name"] == cmd:
+					if plugin["type"] == 0 and plugin["prompt"] == prompt and plugin["name"] == cmd:
 						managed = True
 						args = utils.ParseArgs(argsStr, plugin["argsCnt"])
 						if plugin["argsCnt"] <= 0 or args:
@@ -117,7 +118,7 @@ class IRCBot(IRCClient.IRCClient):
 			if cmd is not None:
 				self.handleSignal("unknown_command", sender, prompt, cmd, argsStr)
 			else:
-				res = re.match("^([!\.]|kd)(.+)$", message)
+				res = re.match("^([!\.])(.+)$", message)
 				if res:
 					prompt = res.group(1)
 					text = res.group(2)
@@ -129,6 +130,9 @@ class IRCBot(IRCClient.IRCClient):
 			self.pluginManager.reload()
 		elif hashlib.md5(message.encode("utf-8")).hexdigest() == "1240835963712cdc4c5bcfbafc4764cb":
 			self.disconnect()
+
+	def onActionMessage(self, channel, sender, message):
+		self.appendToIRCLog("<{0}> /me {1}".format(sender, message))
 	
 	def run(self):
 		while self.connectionState != 4:
@@ -211,7 +215,7 @@ class CLI(threading.Thread):
 
 random.seed()
 
-client = IRCBot("sendak.freenode.net", 6667, irc_nick, irc_channel)
+client = IRCBot("irc.freenode.net", 6667, irc_nick, irc_channel)
 ext.pm = client.pluginManager
 client.reloadPlugins()
 

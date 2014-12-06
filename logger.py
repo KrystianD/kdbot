@@ -27,4 +27,4 @@ class LogHandler:
 
 class ConsoleHandler:
 	def Log (self, level, message):
-		print(datetime.datetime.now ().strftime ("[%H:%M:%S] ") + message)
+		print((datetime.datetime.now ().strftime ("[%H:%M:%S] ") + message).encode("utf-8"))

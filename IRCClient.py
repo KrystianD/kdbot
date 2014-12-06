@@ -67,7 +67,7 @@ class IRCClient(object):
 		
 	def processMessage(self, msg):
 		self.onServerMessage(msg)
-		
+
 		self.lastPing = time.time()
 		# Polaczenie
 		res = re.match("^([^ ]+) :(.+)$", msg)
@@ -188,7 +188,8 @@ class IRCClient(object):
 						message = res3.group(2)
 						res4 = re.match("\x01ACTION (.*)\x01", message)
 						if res4 is not None:
-							print("Me: " + res4.group(1))
+							message = res4.group(1)
+							self.onActionMessage(channel, senderNick, message)
 						else:
 							self.lastTarget = "#"+channel
 							self.onPublicMessage(channel, senderNick, message)
@@ -198,7 +199,7 @@ class IRCClient(object):
 							target = res3.group(1)
 							message = res3.group(2)
 							self.lastTarget = senderNick
-							self.onPrivateMessage(target, message)				
+							self.onPrivateMessage(target, message)
 					
 				# KICK
 				elif cmd == "KICK":
@@ -281,6 +282,7 @@ class IRCClient(object):
 	def onSendServerMessage(self, message): pass
 	def onPublicMessage(self, channel, senderObj, message): pass
 	def onPrivateMessage(self, senderObj, message): pass
+	def onActionMessage(self, channel, sender, message): pass
 	
 	# Akcesory
 	def getNickList(self): return self.nickList
